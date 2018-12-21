@@ -23,7 +23,7 @@ class Dictaphone extends Component {
         const { transcript, resetTranscript, browserSupportsSpeechRecognition } = this.props;
 
         if (!browserSupportsSpeechRecognition) {
-            return null
+            return null;
         }
 
         return (

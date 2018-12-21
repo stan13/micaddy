@@ -22,7 +22,8 @@ class App extends Component {
       });
     }
 
-    const client = new ApiAiClient({accessToken: '3de2fe2cad364c1b8cf66ce9cd6bb682'});
+    const client = new ApiAiClient({accessToken: '7b63687e42d648798dc229503c1e8b2b'});
+    console.log(client.getApiVersion());
 
     this.state = {
       holes: holes,
@@ -43,7 +44,8 @@ class App extends Component {
                       console.log(holeNumber);
                   }
                   const score = response.result.parameters.shots;
-                  this.setScore(Number(holeNumber), score);
+                  const scorePhrase = response.result.parameters.ScorePhrase;
+                  this.setScore(Number(holeNumber), score, scorePhrase);
               }
           })
           .catch((error) => {
@@ -55,11 +57,15 @@ class App extends Component {
       return this.state.holes.indexOf(this.state.holes.find(hole => !hole.score));
   };
 
-  setScore = (hole, score) => {
+  setScore = (hole, score, scorePhrase) => {
       const start = this.state.holes.slice(0, hole-1);
       const middle = this.state.holes.slice(hole-1, hole);
       const end = this.state.holes.slice(hole, this.state.holes.length);
-      middle[0].score = score;
+      if (scorePhrase) {
+          middle[0].score = middle[0].par + Number(scorePhrase);
+      } else if (score) {
+          middle[0].score = score;
+      }
       const array = start.concat(middle).concat(end);
       console.log(array);
       this.setState({holes: array});
